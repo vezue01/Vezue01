@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEZUE | Advanced Dashboard</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #020604;
+  color: #00ff77;
+  font-family: monospace;
+  min-height: 100vh;
+  padding: 15px;
+}
+
+#matrix {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 650px;
+  margin: 20px auto;
+  background: rgba(0,10,5,.94);
+  border: 1px solid #00ff77;
+  border-radius: 14px;
+  padding: 17px;
+  box-shadow: 0 0 25px #00ff7744;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #176d3b;
+  padding-bottom: 15px;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+  text-shadow: 0 0 12px #00ff77;
+}
+
+.online {
+  color: #00ff77;
+  font-size: 12px;
+}
+
+.profile {
+  padding: 18px 0;
+  text-align: center;
+}
+
+.avatar {
+  width: 65px;
+  height: 65px;
+  border: 2px solid #00ff77;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: auto;
+  font-size: 27px;
+  box-shadow: 0 0 18px #00ff77;
+}
+
+.profile h2 {
+  margin-bottom: 5px;
+}
+
+.muted {
+  color: #8bcba7;
+  font-size: 12px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat {
+  border: 1px solid #176d3b;
+  border-radius: 8px;
+  padding: 13px;
+  background: #03130a;
+}
+
+.stat small {
+  color: #8bcba7;
+}
+
+.stat h3 {
+  margin: 8px 0 0;
+  font-size: 17px;
+}
+
+.section-title {
+  border-bottom: 1px solid #176d3b;
+  padding-bottom: 9px;
+  margin-top: 24px;
+}
+
+.terminal {
+  background: #000;
+  border: 1px solid #00ff77;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.terminal-head {
+  padding: 12px;
+  background: #062011;
+  border-bottom: 1px solid #176d3b;
+  font-size: 12px;
+}
+
+#output {
+  height: 190px;
+  overflow-y: auto;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.line {
+  white-space: pre-wrap;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 7px;
+  border-top: 1px solid #176d3b;
+}
+
+.prompt {
+  color: #00ff77;
+  font-size: 12px;
+}
+
+input {
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+  color: #00ff77;
+  border: none;
+  outline: none;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+button {
+  background: #00ff77;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.commands button {
+  font-size: 11px;
+  padding: 9px;
+}
+
+footer {
+  text-align: center;
+  color: #559b70;
+  font-size: 11px;
+  margin-top: 22px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="dashboard">
+
+<header>
+  <div class="logo">⚡ VEZUE</div>
+  <div class="online">● SYSTEM ONLINE</div>
+</header>
+
+<div class="profile">
+  <div class="avatar">V</div>
+  <h2>WELCOME, VEZUE</h2>
+  <div class="muted">ADVANCED DEVELOPER TERMINAL</div>
+  <p id="clock"></p>
+</div>
+
+<div class="stats">
+
+  <div class="stat">
+    <small>● SYSTEM STATUS</small>
+    <h3>ONLINE</h3>
+  </div>
+
+  <div class="stat">
+    <small>● MODE</small>
+    <h3>ADVANCED</h3>
+  </div>
+
+  <div class="stat">
+    <small>● TERMINAL</small>
+    <h3>ACTIVE</h3>
+  </div>
+
+  <div class="stat">
+    <small>● SECURITY</small>
+    <h3>DEMO MODE</h3>
+  </div>
+
+</div>
+
+<h3 class="section-title">⌨ COMMAND TERMINAL</h3>
+
+<div class="terminal">
+
+  <div class="terminal-head">
+    VEZUE TERMINAL — LOCAL DEMO
+  </div>
+
+  <div id="output" aria-live="polite">
+    <div class="line">Initializing VEZUE system...</div>
+    <div class="line">Welcome developer!</div>
+    <div class="line">Type help to see commands.</div>
+  </div>
+
+  <div class="input-row">
+    <span class="prompt">vezue@matrix:~$</span>
+    <input id="command" placeholder="Enter command..."
+    autocomplete="off" spellcheck="false">
+    <button onclick="runCommand()">RUN</button>
+  </div>
+
+</div>
+
+<h3 class="section-title">⚡ QUICK COMMANDS</h3>
+
+<div class="commands">
+  <button onclick="quick('help')">HELP</button>
+  <button onclick="quick('whoami')">WHOAMI</button>
+  <button onclick="quick('date')">DATE</button>
+  <button onclick="quick('status')">STATUS</button>
+  <button onclick="quick('scan')">SCAN</button>
+  <button onclick="quick('clear')">CLEAR</button>
+</div>
+
+<footer>
+  VEZUE ADVANCED DASHBOARD<br>
+  LEARN • BUILD • CREATE
+</footer>
+
+</div>
+
+<script>
+
+// LIVE CLOCK
+function clock() {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleString();
+}
+clock();
+setInterval(clock, 1000);
+
+
+// TERMINAL
+const output = document.getElementById("output");
+const input = document.getElementById("command");
+
+function print(text) {
+  const line = document.createElement("div");
+  line.className = "line";
+  line.textContent = text;
+  output.appendChild(line);
+  output.scrollTop = output.scrollHeight;
+}
+
+function quick(command) {
+  input.value = command;
+  runCommand();
+}
+
+function runCommand() {
+
+  const cmd = input.value.trim().toLowerCase();
+
+  if (!cmd) return;
+
+  print("vezue@matrix:~$ " + cmd);
+  input.value = "";
+
+  switch(cmd) {
+
+    case "help":
+      print("AVAILABLE COMMANDS:");
+      print("help    - Show commands");
+      print("whoami  - User information");
+      print("date    - Current date");
+      print("status  - Dashboard status");
+      print("scan    - Simulated demo scan");
+      print("clear   - Clear terminal");
+      break;
+
+    case "whoami":
+      print("Username: VEZUE");
+      print("Role: Developer");
+      print("Mode: Learning");
+      break;
+
+    case "date":
+      print(new Date().toString());
+      break;
+
+    case "status":
+      print("Dashboard: ONLINE");
+      print("Matrix: RUNNING");
+      print("Terminal: ACTIVE");
+      print("Security: LOCAL DEMO");
+      break;
+
+    case "scan":
+      print("Starting visual demo scan...");
+      let count = 0;
+      const scanTimer = setInterval(() => {
+        count++;
+        print("Demo scan progress: " + (count * 20) + "%");
+        if(count === 5) {
+          clearInterval(scanTimer);
+          print("Demo scan completed!");
+          print("No real devices or networks were scanned.");
+        }
+      }, 500);
+      break;
+
+    case "clear":
+      output.innerHTML = "";
+      break;
+
+    default:
+      print("Command not found: " + cmd);
+      print("Type help to see available commands.");
+  }
+}
+
+input.addEventListener("keydown", function(e) {
+  if(e.key === "Enter") runCommand();
+});
+
+
+// MATRIX ANIMATION
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZアイウエオ";
+const size = 15;
+let drops = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const columns = Math.ceil(canvas.width / size);
+  drops = Array(columns).fill(1);
+}
+
+function draw() {
+  ctx.fillStyle = "rgba(0,0,0,0.12)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "#00ff66";
+  ctx.font = size + "px monospace";
+
+  drops.forEach((y,i) => {
+    const char = chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(char,i*size,y*size);
+
+    if(y*size > canvas.height && Math.random() > 0.97) {
+      drops[i] = 0;
+    }
+    drops[i]++;
+  });
+}
+
+resize();
+window.addEventListener("resize",resize);
+setInterval(draw,55);
+
+</script>
+
+</body>
+</html>
+
